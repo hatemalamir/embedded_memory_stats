@@ -11,9 +11,10 @@
  * @file stats.c
  * @brief Implementation of a group of statistical functions in stats.h
  *
- * This file contains definition of all statistical function defined in stats.c.
- * Most functions deal with array of unsigned chars with size passed as unsigned
- * int. The main output function prints to the standard output.
+ * This file contains implementation of all statistical function defined in
+ * stats.h.  Most functions process an array of unsigned chars with size passed
+ * as unsigned int. The main output function prints different statistics to the
+ * standard output.
  *
  * @author Hatem Alamir
  * @date 11/21/2024
@@ -23,6 +24,7 @@
 
 
 #include <stdio.h>
+#include <errno.h>
 #include "stats.h"
 
 /* Size of the Data Set */
@@ -35,22 +37,116 @@ void main() {
                               200, 122, 150, 90,   92,  87, 177, 244,
                               201,   6,  12,  60,   8,   2,   5,  67,
                                 7,  87, 250, 230,  99,   3, 100,  90};
-
-  /* Other Variable Declarations Go Here */
-  /* Statistics and Printing Functions Go Here */
-
+  print_statistics(test, SIZE);
 }
 
-void print_statistics(unsigned char* arr, const unsigned int length) {}
+void print_statistics(unsigned char* arr, const unsigned int length) {
+  printf(">> Original Array: ");
+  print_array(arr, length);
+  printf("\n");
 
-void print_array(const unsigned char* arr, const unsigned int length) {}
+  printf(">> Sorted Array: ");
+  sort_array(arr, length);
+  print_array(arr, length);
+  printf("\n");
 
-unsigned char find_median(unsigned char* arr, const unsigned int length) {}
+  errno = 0;
+  unsigned char temp = find_median(arr, length);
+  if(errno == EINVAL) {
+      perror("Error calculating median. Possible empty array!");
+  }
+  printf(">> Median: %d\n", temp);
 
-unsigned char find_mean(unsigned char* arr, const unsigned int length) {}
+  errno = 0;
+  temp = find_mean(arr, length);
+  if(errno == EINVAL) {
+      perror("Error calculating mean. Possible empty array!");
+  }
+  printf(">> Mean: %d\n", temp);
 
-unsigned char find_maximum(unsigned char* arr, const unsigned int length) {}
+  errno = 0;
+  temp = find_maximum(arr, length);
+  if(errno == EINVAL) {
+      perror("Error calculating maximum. Possible empty array!");
+  }
+  printf(">> Maximum: %d\n", temp);
 
-unsigned char find_minimum(unsigned char* arr, const unsigned int length) {}
+  errno = 0;
+  temp = find_minimum(arr, length);
+  if(errno == EINVAL) {
+      perror("Error calculating minimum. Possible empty array!");
+  }
+  printf(">> Minimum: %d\n", temp);
+}
 
-unsigned char sort_array(unsigned char* arr, const unsigned int length) {}
+void print_array(const unsigned char* arr, const unsigned int length) {
+    printf("[");
+    for(unsigned int i = 0; i < length - 1; i++)
+        printf("%d, ", arr[i]);
+    if(length > 0)
+        printf("%d]", arr[length - 1]);
+}
+
+/**
+ * @brief Given an array of data and two indices, swap the data at those indices 
+ *
+ * An array is passed as a pointer, and two indices as offsets from that
+ * pointer. Using array notation, swap the data values at those two indices.
+ * 
+ *
+ * @param arr array of data
+ * @param i1 first index to be swapped
+ * @param i2 second index to be swapped 
+ *
+ * @return This function does not return any value. 
+ */
+void swap(unsigned char* arr, const int i1, const int i2) {
+    unsigned char temp = arr[i1];
+    arr[i1] = arr[i2];
+    arr[i2] = temp;
+}
+
+void sort_array(unsigned char* arr, const unsigned int length) {
+    for(int i = 0; i < length; i++)
+        for(int j = length - 1; j > i; j--)
+            if(arr[j] > arr[j - 1])
+                swap(arr, j, j - 1);
+}
+
+unsigned char find_median(unsigned char* arr, const unsigned int length) {
+    if(length < 1) {
+        errno = EINVAL;
+        return 0;
+    }
+    if(length % 2 == 0)
+        return (arr[length / 2] + arr[length / 2 + 1]) / 2;
+    else 
+        return arr[length / 2];
+}
+
+unsigned char find_mean(unsigned char* arr, const unsigned int length) {
+    if(length < 1) {
+        errno = EINVAL;
+        return 0;
+    }
+    unsigned int sum = 0;
+    for(unsigned int i = 0; i < length; i++)
+        sum += arr[i];
+    return sum / length;
+}
+
+unsigned char find_maximum(unsigned char* arr, const unsigned int length) {
+    if(length < 1) {
+        errno = EINVAL;
+        return 0;
+    }
+    return arr[0];
+}
+
+unsigned char find_minimum(unsigned char* arr, const unsigned int length) {
+    if(length < 1) {
+        errno = EINVAL;
+        return 0;
+    }
+    return arr[length - 1];
+}
