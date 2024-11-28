@@ -7,11 +7,22 @@
 # software. Alex Fosdick and the University of Colorado are not liable for any
 # misuse of this material. 
 #
+# Modified by Hatem Alamir
+# Copyright (C) 2024 by Hatem Alamir
+#
 #*****************************************************************************
 
 # Add your Source files to this variable
-SOURCES =
+ifeq ($(PLATFORM),HOST)
+	SOURCES = main.c \
+			  memory.c
+else
+	SOURCES = main.c \
+			  memory.c \
+			  interrupts_msp432p401r_gcc.c \
+			  startup_msp432p401r_gcc.c \
+			  system_msp432p401r.c
+endif
 
 # Add your include paths to this variable
-INCLUDES = 
-
+INCLUDES = ../include
