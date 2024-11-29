@@ -53,6 +53,10 @@ ifeq ($(PLATFORM),MSP432)
 	LINKER_FILE = ../msp432p401r.lds
 	CC = arm-none-eabi-gcc
 	LD = arm-none-eabi-ld
+	# The instructions were to use -mfloat-abi=hard but that gives an error "FP
+	# registers might be clobbered despite 'interrupt' attribute". Switching the
+	# flag to "soft" was the quickest and most minimal solution especially that
+	# we don't need floating-point operations in this assignment.
 	CFLAGS = -std=c99 -Wall -Werror -g -O0 -mcpu=$(CPU) -m$(ARCH) -march=$(CORE) -mfloat-abi=soft -mfpu=$(FPU) --specs=$(SPECS) -D$(PLATFORM)
 	LDFLAGS = -Wl,-Map=$(TARGET).map -T $(LINKER_FILE)
 else
