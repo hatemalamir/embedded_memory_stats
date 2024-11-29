@@ -27,40 +27,46 @@
 #      SPECS - Specs file to give the linker (nosys.specs, nano.specs)
 #
 #------------------------------------------------------------------------------
+ifneq ($(PLATFORM),)
+ifneq ($(PLATFORM),MSP432)
+ifneq ($(PLATFORM),HOST)
+$(error Invalid value for PLATFORM: $(PLATFORM). Expected HOST or MSP432.)
+endif
+endif
+else
+	PLATFORM=HOST
+endif
+
 include sources.mk
 
 # Platform Overrides
 TARGET = c1m2
 
 # Architectures Specific Flags
-ifeq ($(PLATFORM),HOST)
+ifeq ($(PLATFORM),MSP432)
 	# Compiler Flags and Defines
-	CC = arm-none-eabi-gcc
-	LD = arm-none-eabi-ld
-	CFLAGS = -std=c99 -Wall -Werror -g -O0 -D$(PLATFORM)
-	CPPFLAGS = -I$(INCLUDES) -MP -MMD -MF $@.dep
-	LDFLAGS = -Wl,-Map=$(TARGET).map
-else ifeq($(),MSP432)
 	CPU = cortex-m4
 	ARCH = thumb
 	CORE = armv7e-m
 	FPU = fpv4-sp-d16
 	SPECS = nosys.specs
-	LINKER_FILE = msp432p401r.lds
-
+	LINKER_FILE = ../msp432p401r.lds
 	CC = arm-none-eabi-gcc
 	LD = arm-none-eabi-ld
-	CFLAGS = -std=c99 -Wall -Werror -g -O0 -mcpu=$(CPU) -m$(ARCH) -march=$(CORE) -mfloat-abi=hard -mfpu=$(FPU) --specs=$(SPECS) -D$(PLATFORM)
-	CPPFLAGS = -I$(INCLUDES) -MP -MMD -MF $@.dep
+	CFLAGS = -std=c99 -Wall -Werror -g -O0 -mcpu=$(CPU) -m$(ARCH) -march=$(CORE) -mfloat-abi=soft -mfpu=$(FPU) --specs=$(SPECS) -fomit-frame-pointer -D$(PLATFORM)
 	LDFLAGS = -Wl,-Map=$(TARGET).map -T $(LINKER_FILE)
 else
-	$(error Invalid value for PLATFORM: $(PLATFORM). Expected HOST or MSP432.)
+	CC = gcc
+	LD = collect2
+	CFLAGS = -std=c99 -Wall -Werror -g -O0 -D$(PLATFORM)
+	LDFLAGS =
 endif
+CPPFLAGS = $(INCLUDES)
 
 PPCS = $(SOURCES:.c=.i)
 ASMS = $(SOURCES:.c=.asm)
-OBJS = $(SOURCES:.c=.o)
 DEPS = $(SOURCES:.c=.dep)
+OBJS = $(SOURCES:.c=.o)
 
 %.i: %.c
 	$(CC) -E $< $(CFLAGS) $(CPPFLAGS) -o $@
@@ -68,11 +74,14 @@ DEPS = $(SOURCES:.c=.dep)
 %.asm: %.c
 	$(CC) -S $< $(CFLAGS) $(CPPFLAGS) -o $@
 
+%.dep: %.c
+	$(CC) -E $< $(CFLAGS) $(CPPFLAGS) -MP -MMD -MF $@
+
 %.o: %.c
 	$(CC) -c $< $(CFLAGS) $(CPPFLAGS) -o $@
 
 .PHONY: compile-all
-complile_all: $(OBJS)
+compile-all: $(PPCS) $(ASMS) $(DEPS) $(OBJS)
 
 .PHONY: build
 build: all
@@ -80,8 +89,9 @@ build: all
 .PHONY: all
 all: $(TARGET).out
 
-$(TARGET).out: $(OBJS)
+$(TARGET).out: $(OBJS) $(DEPS)
 	$(CC) $(OBJS) $(CFLAGS) $(LDFLAGS) -o $@
 
 .PHONY: clean
+clean:
 	rm -f $(TARGET).map $(TARGET).out $(OBJS) $(ASMS) $(DEPS) $(DEPS) $(PPCS)
