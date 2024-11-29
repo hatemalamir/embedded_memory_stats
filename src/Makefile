@@ -53,7 +53,7 @@ ifeq ($(PLATFORM),MSP432)
 	LINKER_FILE = ../msp432p401r.lds
 	CC = arm-none-eabi-gcc
 	LD = arm-none-eabi-ld
-	CFLAGS = -std=c99 -Wall -Werror -g -O0 -mcpu=$(CPU) -m$(ARCH) -march=$(CORE) -mfloat-abi=soft -mfpu=$(FPU) --specs=$(SPECS) -fomit-frame-pointer -D$(PLATFORM)
+	CFLAGS = -std=c99 -Wall -Werror -g -O0 -mcpu=$(CPU) -m$(ARCH) -march=$(CORE) -mfloat-abi=soft -mfpu=$(FPU) --specs=$(SPECS) -D$(PLATFORM)
 	LDFLAGS = -Wl,-Map=$(TARGET).map -T $(LINKER_FILE)
 else
 	CC = gcc
