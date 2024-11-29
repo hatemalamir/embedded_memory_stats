@@ -53,6 +53,7 @@ ifeq ($(PLATFORM),MSP432)
 	LINKER_FILE = ../msp432p401r.lds
 	CC = arm-none-eabi-gcc
 	LD = arm-none-eabi-ld
+	SIZE = arm-none-eabi-size
 	# The instructions were to use -mfloat-abi=hard but that gives an error "FP
 	# registers might be clobbered despite 'interrupt' attribute". Switching the
 	# flag to "soft" was the quickest and most minimal solution especially that
@@ -63,7 +64,8 @@ else
 	CC = gcc
 	LD = collect2
 	CFLAGS = -std=c99 -Wall -Werror -g -O0 -D$(PLATFORM)
-	LDFLAGS =
+	LDFLAGS = -Wl,-map $(TARGET).map
+	SIZE = size
 endif
 CPPFLAGS = $(INCLUDES)
 
@@ -93,8 +95,11 @@ build: all
 .PHONY: all
 all: $(TARGET).out
 
+# The touch command is due to a weird issue with the default MacOS linker.
+# First, the paramter name is `-map` instead of `-Map` and second it expects the
+# map file to be there before linking. Weird right?
 $(TARGET).out: $(OBJS) $(DEPS)
-	$(CC) $(OBJS) $(CFLAGS) $(LDFLAGS) -o $@
+	touch $(TARGET).map && $(CC) $(OBJS) $(CFLAGS) $(LDFLAGS) -o $@ && $(SIZE) $@
 
 .PHONY: clean
 clean:
