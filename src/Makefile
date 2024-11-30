@@ -64,7 +64,7 @@ else
 	CC = gcc
 	LD = collect2
 	CFLAGS = -std=c99 -Wall -Werror -g -O0 -D$(PLATFORM)
-	LDFLAGS = -Wl,-map $(TARGET).map
+	LDFLAGS =
 	SIZE = size
 endif
 CPPFLAGS = $(INCLUDES)
@@ -95,11 +95,8 @@ build: all
 .PHONY: all
 all: $(TARGET).out
 
-# The touch command is due to a weird issue with the default MacOS linker.
-# First, the paramter name is `-map` instead of `-Map` and second it expects the
-# map file to be there before linking. Weird right?
 $(TARGET).out: $(OBJS) $(DEPS)
-	touch $(TARGET).map && $(CC) $(OBJS) $(CFLAGS) $(LDFLAGS) -o $@ && $(SIZE) $@
+	$(CC) $(OBJS) $(CFLAGS) $(LDFLAGS) -o $@ && $(SIZE) $@
 
 .PHONY: clean
 clean:
