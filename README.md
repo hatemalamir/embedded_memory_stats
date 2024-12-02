@@ -13,28 +13,46 @@
 ###*****************************************************************************
 
 
-### This is the second assessment of the Coursera Specialization of Embedded
+### This is the final assessment of the Coursera Specialization of Embedded
 ### Software Essentials, Introduction to Embedded Software and Development
 ### Environments.
 
 ### The repository is organized into multiple files and directories:
 ###      README.md - This file
-###      msp432p401r.lds - The linker file you are to use for linking
-###      `src` folder : contains five source files (*.c)
+###      `course1` - sources files of the assessment. Contains the following:
 ###      - Makefile - The makefile
 ###      - sources.mk - The source file
-###      - main.c - Main file
-###      - memory.c - File that interacts with memory through an IO abstraction
+###      - msp432p401r.lds - The linker file you are to use for linking
+###      - `src` folder : contains the following:
+###      -- course1.c - 
+###      -- data.c - 
+###      -- main.c - Main file
+###      -- memory.c - File that interacts with memory through an IO abstraction
 ###        interface
-###      - interrupts_msp432p401r_gcc.c - MSP432 specific C-file for interrupts
-###      - startup_msp432p401r_gcc.c - MSP432 specific C-file for startup
-###      - system_msp432p401r.c - MSP432 specific C-file for for system
+###      -- stats.c - Simple statistic functions
+###      -- interrupts_msp432p401r_gcc.c - MSP432 specific C-file for interrupts
+###      -- startup_msp432p401r_gcc.c - MSP432 specific C-file for startup
+###      -- system_msp432p401r.c - MSP432 specific C-file for for system
 ###        information
-###      `include` folder : contains the three directories of supporting header
+###      - `include` folder : contains the three directories of supporting header
 ###        files
-###      - common - Contains common headers for both platform targets
-###      - msp432 - Contains MSP432 platform headers
-###      - CMSIS - Contains ARM architecture specific headers
+###      -- common - Common headers for all targets. Contains the following:
+###      --- course1.h - 
+###      --- data.h - 
+###      --- memory.h - 
+###      --- platform.h - 
+###      --- stats.h - 
+###      -- msp432 - Contains MSP432 headers. Contains the following:
+###      --- msp.h - 
+###      --- msp432p401r.h - 
+###      --- msp_compatibility.h - 
+###      --- system_msp432p401r.h - 
+###      -- CMSIS - Contains ARM architecture specific headers
+###      --- cmsis_gcc.h - 
+###      --- core_cm4.h - 
+###      --- core_cmFunc.h - 
+###      --- core_cmInstr.h - 
+###      --- core_cmSimd.h - 
 ###      
 ###      
 ###      

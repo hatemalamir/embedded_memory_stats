@@ -26,6 +26,7 @@
 #include <stdio.h>
 #include <errno.h>
 #include "stats.h"
+#include "platform.h"
 
 /* Size of the Data Set */
 #define SIZE (40)
@@ -41,50 +42,52 @@ void main() {
 }
 
 void print_statistics(unsigned char* arr, const unsigned int length) {
-  printf(">> Original Array: ");
+  PRINTF(">> Original Array: ");
   print_array(arr, length);
-  printf("\n");
+  PRINTF("\n");
 
-  printf(">> Sorted Array: ");
+  PRINTF(">> Sorted Array: ");
   sort_array(arr, length);
   print_array(arr, length);
-  printf("\n");
+  PRINTF("\n");
 
   errno = 0;
   unsigned char temp = find_median(arr, length);
   if(errno == EINVAL) {
       perror("Error calculating median. Possible empty array!");
   }
-  printf(">> Median: %d\n", temp);
+  PRINTF(">> Median: %d\n", temp);
 
   errno = 0;
   temp = find_mean(arr, length);
   if(errno == EINVAL) {
       perror("Error calculating mean. Possible empty array!");
   }
-  printf(">> Mean: %d\n", temp);
+  PRINTF(">> Mean: %d\n", temp);
 
   errno = 0;
   temp = find_maximum(arr, length);
   if(errno == EINVAL) {
       perror("Error calculating maximum. Possible empty array!");
   }
-  printf(">> Maximum: %d\n", temp);
+  PRINTF(">> Maximum: %d\n", temp);
 
   errno = 0;
   temp = find_minimum(arr, length);
   if(errno == EINVAL) {
       perror("Error calculating minimum. Possible empty array!");
   }
-  printf(">> Minimum: %d\n", temp);
+  PRINTF(">> Minimum: %d\n", temp);
 }
 
 void print_array(const unsigned char* arr, const unsigned int length) {
-    printf("[");
+#ifdef VERBOSE
+    PRINTF("[");
     for(unsigned int i = 0; i < length - 1; i++)
-        printf("%d, ", arr[i]);
+        PRINTF("%d, ", arr[i]);
     if(length > 0)
-        printf("%d]", arr[length - 1]);
+        PRINTF("%d]", arr[length - 1]);
+#endif
 }
 
 /**

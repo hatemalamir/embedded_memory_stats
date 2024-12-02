@@ -40,7 +40,10 @@ endif
 include sources.mk
 
 # Platform Overrides
-TARGET = c1m2
+TARGET = c1
+
+# Verbose output
+VERBOSE=
 
 # Architectures Specific Flags
 ifeq ($(PLATFORM),MSP432)
@@ -52,7 +55,6 @@ ifeq ($(PLATFORM),MSP432)
 	SPECS = nosys.specs
 	LINKER_FILE = ../msp432p401r.lds
 	CC = arm-none-eabi-gcc
-	LD = arm-none-eabi-ld
 	SIZE = arm-none-eabi-size
 	# The instructions were to use -mfloat-abi=hard but that gives an error "FP
 	# registers might be clobbered despite 'interrupt' attribute". Switching the
@@ -62,7 +64,6 @@ ifeq ($(PLATFORM),MSP432)
 	LDFLAGS = -Wl,-Map=$(TARGET).map -T $(LINKER_FILE)
 else
 	CC = gcc
-	LD = collect2
 	CFLAGS = -std=c99 -Wall -Werror -g -O0 -D$(PLATFORM)
 	LDFLAGS =
 	SIZE = size
