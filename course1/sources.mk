@@ -13,19 +13,19 @@
 #*****************************************************************************
 
 # Add your Source files to this variable
-SOURCES = course1.c \
-		  data.c \
-		  main.c \
-		  memory.c \
-		  stats.c
+SOURCES = src/course1.c \
+		  src/data.c \
+		  src/main.c \
+		  src/memory.c \
+		  src/stats.c
 # Add your include paths to this variable
-INCLUDES = -I../include/common
+INCLUDES = -Iinclude/common
 
 # Platform dependent sources and includes
 ifeq ($(PLATFORM),MSP432)
-	SOURCES += interrupts_msp432p401r_gcc.c \
-			   startup_msp432p401r_gcc.c \
-			   system_msp432p401r.c
-	INCLUDES += -I../include/msp432 -I../include/CMSIS
+	SOURCES += src/interrupts_msp432p401r_gcc.c \
+			   src/startup_msp432p401r_gcc.c \
+			   src/system_msp432p401r.c
+	INCLUDES += -Iinclude/msp432 -Iinclude/CMSIS
 endif
 

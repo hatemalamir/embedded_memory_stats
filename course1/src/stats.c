@@ -28,19 +28,6 @@
 #include "stats.h"
 #include "platform.h"
 
-/* Size of the Data Set */
-#define SIZE (40)
-
-void main() {
-
-  unsigned char test[SIZE] = { 34, 201, 190, 154,   8, 194,   2,   6,
-                              114, 88,   45,  76, 123,  87,  25,  23,
-                              200, 122, 150, 90,   92,  87, 177, 244,
-                              201,   6,  12,  60,   8,   2,   5,  67,
-                                7,  87, 250, 230,  99,   3, 100,  90};
-  print_statistics(test, SIZE);
-}
-
 void print_statistics(unsigned char* arr, const unsigned int length) {
   PRINTF(">> Original Array: ");
   print_array(arr, length);
@@ -86,7 +73,7 @@ void print_array(const unsigned char* arr, const unsigned int length) {
     for(unsigned int i = 0; i < length - 1; i++)
         PRINTF("%d, ", arr[i]);
     if(length > 0)
-        PRINTF("%d]", arr[length - 1]);
+        PRINTF("%d]\n", arr[length - 1]);
 #endif
 }
 

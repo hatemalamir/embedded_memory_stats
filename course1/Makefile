@@ -40,11 +40,10 @@ endif
 include sources.mk
 
 # Platform Overrides
-TARGET = c1
+TARGET = c1final
 
-# Verbose output
-VERBOSE=
-
+CFLAGS = -std=c99 -Wall -Werror -g -O0 -D$(PLATFORM) -DCOURSE1 -DVERBOSE
+CPPFLAGS = $(INCLUDES)
 # Architectures Specific Flags
 ifeq ($(PLATFORM),MSP432)
 	# Compiler Flags and Defines
@@ -53,22 +52,20 @@ ifeq ($(PLATFORM),MSP432)
 	CORE = armv7e-m
 	FPU = fpv4-sp-d16
 	SPECS = nosys.specs
-	LINKER_FILE = ../msp432p401r.lds
+	LINKER_FILE = msp432p401r.lds
 	CC = arm-none-eabi-gcc
 	SIZE = arm-none-eabi-size
 	# The instructions were to use -mfloat-abi=hard but that gives an error "FP
 	# registers might be clobbered despite 'interrupt' attribute". Switching the
 	# flag to "soft" was the quickest and most minimal solution especially that
 	# we don't need floating-point operations in this assignment.
-	CFLAGS = -std=c99 -Wall -Werror -g -O0 -mcpu=$(CPU) -m$(ARCH) -march=$(CORE) -mfloat-abi=soft -mfpu=$(FPU) --specs=$(SPECS) -D$(PLATFORM)
+	CFLAGS += -mcpu=$(CPU) -m$(ARCH) -march=$(CORE) -mfloat-abi=soft -mfpu=$(FPU) --specs=$(SPECS)
 	LDFLAGS = -Wl,-Map=$(TARGET).map -T $(LINKER_FILE)
 else
 	CC = gcc
-	CFLAGS = -std=c99 -Wall -Werror -g -O0 -D$(PLATFORM)
 	LDFLAGS =
 	SIZE = size
 endif
-CPPFLAGS = $(INCLUDES)
 
 PPCS = $(SOURCES:.c=.i)
 ASMS = $(SOURCES:.c=.asm)
@@ -101,4 +98,4 @@ $(TARGET).out: $(OBJS) $(DEPS)
 
 .PHONY: clean
 clean:
-	rm -f $(TARGET).map $(TARGET).out $(OBJS) $(ASMS) $(DEPS) $(DEPS) $(PPCS)
+	rm -rf *.out src/*.o *.map src/*.i src/*.asm src/*.dep

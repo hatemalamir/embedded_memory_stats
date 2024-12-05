@@ -21,6 +21,7 @@
  *
  * Modfiled by Hatem Alamir 12/1/2024
  */
+#include "course1.h"
 
 int main(void) {
 #ifdef COURSE1

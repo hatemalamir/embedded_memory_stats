@@ -25,8 +25,8 @@
 #ifndef __MEMORY_H__
 #define __MEMORY_H__
 
-#include<cstddef>
 #include<stdint.h>
+#include<stddef.h>
 
 /**
  * @brief Sets a value of a data array 
@@ -144,7 +144,7 @@ uint8_t* my_memcopy(uint8_t * src, uint8_t* dst, size_t length);
  *
  * @return pointer to source
  */
-uint8_t* my_memset(uint8_t * src, size_t length, unit8_t value);
+uint8_t* my_memset(uint8_t * src, size_t length, uint8_t value);
 
 /**
  * @brief Sets a number of bytest to zero.
@@ -200,6 +200,6 @@ int32_t * reserve_words(size_t length);
  * @param src pointer to dynamically allocated memory.
  *
  */
-void free_words(int32_t * src);
+void free_words(uint32_t * src);
 
 #endif /* __MEMORY_H__ */

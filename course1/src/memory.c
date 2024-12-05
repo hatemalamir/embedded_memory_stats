@@ -50,22 +50,21 @@ void clear_all(char * ptr, unsigned int size){
   set_all(ptr, 0, size);
 }
 
+#include<stdio.h>
 uint8_t* my_memmove(uint8_t* src, uint8_t* dst, size_t length) {
-    if(dst > src)
-        for(size_t i = length - 1; i >= 0; i--)
-            *(dst + i) = *(src + i);
-    else if (dst < src)
-        for(size_t i = 0; i < length; i++)
+    for(size_t i = 0; i < length; i++)
+        if(dst > src)
+            *(dst + length - 1 - i) = *(src + length - 1 - i);
+        else if (dst < src)
             *(dst + i) = *(src + i);
     return dst;
 }
 
 uint8_t* my_memcopy(uint8_t* src, uint8_t* dst, size_t length) {
-    if(dst > src)
-        for(size_t i = length - 1; i >= 0; i--)
-            *(dst + i) = *(src + i);
-    else if (dst < src)
-        for(size_t i = 0; i < length; i++)
+    for(size_t i = 0; i < length; i++)
+        if(dst > src)
+            *(dst + length - 1 - i) = *(src + length - 1 - i);
+        else if (dst < src)
             *(dst + i) = *(src + i);
     return dst;
 }
@@ -92,14 +91,9 @@ uint8_t* my_reverse(uint8_t* src, size_t length) {
 }
 
 int32_t* reserve_words(size_t length) {
-  int32_t* l2 = (int32_t *) malloc(length);
-  // We could have included stddef.h and returned NULL but that keyword expands
-  // to 0 anyway, so including the whole file seemed like an overkill.
-  if(! l2)
-    return 0;
-  return l2;
+  return (int32_t *) malloc(length * sizeof(int32_t));
 }
 
-void free_words(int32_t * src) {
+void free_words(uint32_t * src) {
     free(src);
 }
