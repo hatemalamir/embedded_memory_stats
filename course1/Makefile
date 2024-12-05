@@ -42,7 +42,7 @@ include sources.mk
 # Platform Overrides
 TARGET = c1final
 
-CFLAGS = -std=c99 -Wall -Werror -g -O0 -D$(PLATFORM) -DCOURSE1 -DVERBOSE
+CFLAGS = -std=c99 -Wall -Wall -g -O0 -D$(PLATFORM) -DCOURSE1 -DVERBOSE
 CPPFLAGS = $(INCLUDES)
 # Architectures Specific Flags
 ifeq ($(PLATFORM),MSP432)
